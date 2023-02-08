@@ -22,12 +22,3 @@ public class Util {
     }
 }
 
-//Class.forName("org.postgresql.Driver");
-//            String URL = "jdbc:postgresql://localhost:5432/test_table";
-//            String LOGIN = "root";
-//            String PASSWORD = "root";
-//    public static Connection connectDB() throws SQLException {
-//        Connection connection = DriverManager.getConnection(URL, USER, PASSWORD);
-//        return connection;
-//    }
-
