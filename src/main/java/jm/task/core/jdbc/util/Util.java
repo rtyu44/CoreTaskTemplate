@@ -6,7 +6,7 @@ import static java.sql.DriverManager.getConnection;
 
 public class Util {
     private static final String DRIVER = "org.postgresql.Driver";
-    private static final String HOST = "jdbc:postgresql://localhost:5432/test_table?serverTimezone=Europe/Moscow";
+    private static final String HOST = "jdbc:postgresql://localhost:5432/postgres";
     private static final String LOGIN = "root";
     private static final String PASSWORD = "root";
 
