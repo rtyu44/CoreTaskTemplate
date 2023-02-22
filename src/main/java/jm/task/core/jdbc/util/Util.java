@@ -18,9 +18,9 @@ public class Util {
     private static final String HOST = "jdbc:postgresql://localhost:5432/postgres";
     private static final String LOGIN = "root";
     private static final String PASSWORD = "root";
-    private static final String DIALECT = "org.hibernate.dialect.PostgresSQL9Dialect";
+//    private static final String DIALECT = "org.hibernate.dialect.PostgreSQL82Dialect";
 
-    private static SessionFactory sessionFactory = null;
+    private static SessionFactory sessionFactory;
 
     public static Connection getConnection() {
         Connection connection = null;
@@ -30,29 +30,37 @@ public class Util {
         } catch (SQLException | ClassNotFoundException e) {
             e.printStackTrace();
         }
-        return  connection;
+        return connection;
     }
 
 
-    public static SessionFactory getSessionFactory(){
+    public static SessionFactory getSessionFactory() {
+        if (sessionFactory == null) {
+            try {
 
-        try {
-            Configuration configuration = new Configuration()
-                    .setProperty("hibernate.connection.driver_class", DRIVER)
-                    .setProperty("hibernate.connection.url", HOST)
-                    .setProperty("hibernate.connection.username", LOGIN)
-                    .setProperty("hibernate.connection.password", PASSWORD)
-                    .setProperty("hibernate.dialect", DIALECT)
-                    .addAnnotatedClass(User.class)
-                    .setProperty("hibernate.c3p0.min_size","5")
-                    .setProperty("hibernate.c3p0.max_size","200")
-                    .setProperty("hibernate.c3p0.max_statements","200");
+                Properties properties = new Properties();
+                properties.put(Environment.DRIVER, "org.postgresql.Driver");
+                properties.put(Environment.URL, "jdbc:postgresql://localhost:5432/postgres");
+                properties.put(Environment.USER, "root");
+                properties.put(Environment.PASS, "root");
+//                properties.put(Environment.FORMAT_SQL, "true");
+                properties.put(Environment.DIALECT, "org.hibernate.dialect.PostgreSQL82Dialect");
+//                properties.put(Environment.SHOW_SQL, "true");
+//                properties.put(Environment.CURRENT_SESSION_CONTEXT_CLASS, "thread");
+//                properties.put(Environment.HBM2DDL_AUTO, "create");
+//                properties.put(Environment.POOL_SIZE, "5");
 
-            ServiceRegistry serviceRegistry = new StandardServiceRegistryBuilder()
-                    .applySettings(configuration.getProperties()).build();
-            sessionFactory = configuration.buildSessionFactory(serviceRegistry);
-        } catch (HibernateException e) {
-            e.printStackTrace();
+                Configuration configuration = new Configuration();
+                        configuration.addProperties(properties)
+                        .addAnnotatedClass(User.class);
+//                        .buildSessionFactory(); /*здесь возможная ошибка*/
+                StandardServiceRegistryBuilder builder =
+                        new StandardServiceRegistryBuilder().applySettings(configuration.getProperties());
+                sessionFactory = configuration.buildSessionFactory(builder.build());
+
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
         }
         return sessionFactory;
     }
